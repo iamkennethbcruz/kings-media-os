@@ -862,13 +862,13 @@ body::before {
 /* ══ FAB — FLOATING ACTION SYSTEM ════════════════════════════ */
 .fab-zone {
   position: fixed;
-  bottom: 32px;
-  right: 32px; /* bottom right */
+  bottom: 20px;
+  right: 20px;
   z-index: 500;
   display: flex;
   flex-direction: column-reverse;
   align-items: flex-end;
-  gap: 10px;
+  gap: 8px;
 }
 
 
@@ -5153,17 +5153,7 @@ body::before {
 }
 
 /* ══ FAB — FLOATING ACTION SYSTEM ════════════════════════════ */
-.fab-zone {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  z-index: 500;
-  display: flex;
-  flex-direction: column-reverse;
-  align-items: flex-start;
-  gap: 10px;
-  transition: left 0.32s cubic-bezier(0.4,0,0.2,1);
-}
+/* fab-zone duplicate removed */
 body.sidebar-collapsed /* fab-zone left override removed */
 
 .fab-main {
