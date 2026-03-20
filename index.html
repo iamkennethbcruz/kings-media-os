@@ -2788,24 +2788,56 @@ function addClient(){
 
 // ─── RENDER TOC ───────────────────────────────────────────
 function renderTOC(){
-  document.getElementById('toc-list').innerHTML=TOC_DATA.map(function(item){
-    return '<div class="toc-item" onclick="goView(\'' + item.view + '\')">' +
-      '<div class="toc-num">' + item.step + '</div>' +
-      '<div style="flex:1">' +
-        '<div style="display:flex;align-items:center">' +
-          '<div class="toc-title">' + item.title + '</div>' +
-          '<span class="toc-tag auto-pill" style="margin-left:8px">' + item.tag + '</span>' +
-        '</div>' +
-        '<div class="toc-desc">' + item.desc + '</div>' +
-      '</div>' +
-    '</div>';
-  }).join('');
-  document.getElementById('sop-list').innerHTML=SOP_DATA.map(function(s){
-    var stepsHTML = s.steps.map(function(st,i){
-      return '<div class="sop-step"><div class="sop-step-num">'+(i+1)+'</div><div><div class="sop-step-text">'+st.s+'</div><div class="sop-step-why">'+st.w+'</div></div></div>';
+  var SOP_MAP={};
+  SOP_DATA.forEach(function(s){ SOP_MAP[s.step]=s; });
+  if(SOP_DATA.find(function(s){return s.step==='03b';}))
+    SOP_MAP['03']=SOP_DATA.find(function(s){return s.step==='03b';});
+  function sopHTML(sop){
+    if(!sop)return '';
+    var steps=sop.steps.map(function(st,i){
+      return '<div class="sop-step"><div class="sop-step-num">'+(i+1)+'</div><div>'
+        +'<div class="sop-step-text">'+st.s+'</div>'
+        +'<div class="sop-step-why">'+st.w+'</div>'
+        +'</div></div>';
     }).join('');
-    return '<div class="sop-block"><div class="sop-title">SOP '+s.step+': '+s.title+'</div><div class="sop-meta">Frequency: '+s.freq+'</div>'+stepsHTML+'</div>';
+    return '<div class="toc-sop-body">'
+      +'<div class="toc-sop-meta">'
+      +'<span style="font-size:9px;font-family:var(--mono);text-transform:uppercase;color:var(--t3)">Frequency</span>'
+      +'<span style="font-size:11px;font-weight:600;color:var(--brand);margin-left:8px">'+sop.freq+'</span>'
+      +'</div>'+steps+'</div>';
+  }
+  document.getElementById('toc-list').innerHTML=TOC_DATA.map(function(item){
+    var sop=SOP_MAP[item.step]||null;
+    var did='sop-drop-'+item.step;
+    var sopBtn=sop
+      ?('<button class="toc-sop-btn" id="btn-'+did+'" onclick="toggleTOCSOP(this,\''+did+'\')">'
+        +'<svg id="arr-'+did+'" width="12" height="12" viewBox="0 0 12 12" fill="none" style="transition:transform .2s">'
+        +'<path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        +'<span style="font-size:10px;font-weight:600;margin-left:4px;font-family:var(--mono)">SOP</span></button>')
+      :'';
+    var sopDrop=sop?('<div class="toc-sop-drop" id="'+did+'">'+sopHTML(sop)+'</div>'):'';
+    return '<div class="toc-item-wrap">'
+      +'<div class="toc-item">'
+      +'<div class="toc-num">'+item.step+'</div>'
+      +'<div class="toc-item-body" onclick="goView(this.dataset.view)" data-view="'+item.view+'">'
+      +'<div style="display:flex;align-items:center;gap:8px">'
+      +'<div class="toc-title">'+item.title+'</div>'
+      +'<span class="auto-pill">'+item.tag+'</span>'
+      +'</div>'
+      +'<div class="toc-desc">'+item.desc+'</div>'
+      +'</div>'
+      +sopBtn+'</div>'+sopDrop+'</div>';
   }).join('');
+  var sl=document.getElementById('sop-list');
+  if(sl)sl.innerHTML='<p class="toc-sop-note">SOPs are embedded above — click the <strong>SOP</strong> button on any row to expand.</p>';
+}
+function toggleTOCSOP(btn,dropId){
+  var drop=document.getElementById(dropId);
+  var arr=document.getElementById('arr-'+dropId);
+  if(!drop)return;
+  var open=drop.classList.toggle('open');
+  if(arr)arr.style.transform=open?'rotate(180deg)':'rotate(0deg)';
+  if(btn)btn.classList.toggle('active',open);
 }
 // ─── RENDER SETUP ─────────────────────────────────────────
 function renderSetup(){
