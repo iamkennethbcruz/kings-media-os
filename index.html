@@ -19,11 +19,13 @@ async function loadData() {
   const container = document.getElementById('content');
   container.innerHTML = '';
   data.forEach(item => {
-    const el = document.createElement('div');
-    el.innerHTML = `<h2>${item.title}</h2><p>${item.description}</p>`;
-    container.appendChild(el);
-  });
-}
+  const el = document.createElement('div');
+  el.innerHTML = `
+    <h2 class="your-heading-class">${item.title}</h2>
+    <p class="your-paragraph-class">${item.description}</p>
+  `;
+  container.appendChild(el);
+});
 
 loadData();
 </script>
