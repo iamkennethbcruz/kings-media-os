@@ -4,39 +4,42 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Revenue Infrastructure OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 <style>
 
-/*-- PLACEHOLDER FOR YOUR DATA -->*/
+<!-- Populated by Google Sheet data via SheetDB -->
 <div id="content" class="site-content"></div>
 
-/*<!-- SCRIPT TO FETCH GOOGLE SHEET DATA -->*/
 <script>
 async function loadData() {
-  const response = await fetch('YOUR_SHEETDB_API_URL_HERE');
-  const data = await response.json();
+  try {
+    const response = await fetch('YOUR_SHEETDB_API_URL_HERE');
+    if (!response.ok) throw new Error('Fetch failed: ' + response.status);
+    const data = await response.json();
 
-  const container = document.getElementById('content');
-  container.innerHTML = ''; // clear old content
+    const container = document.getElementById('content');
+    container.innerHTML = '';
 
-  data.forEach(item => {
-    const el = document.createElement('div');
-    el.classList.add('item'); // optional wrapper class for each item
-
-    // Use your site's existing classes for headings and paragraphs
-    el.innerHTML = `
-      <h2 class="site-heading">${item.title}</h2>
-      <p class="site-paragraph">${item.description}</p>
-    `;
-    container.appendChild(el);
-  });
+    data.forEach(item => {
+      const el = document.createElement('div');
+      el.classList.add('item');
+      el.innerHTML = `
+        <h2 class="site-heading">${item.title}</h2>
+        <p class="site-paragraph">${item.description}</p>
+      `;
+      container.appendChild(el);
+    });
+  } catch (err) {
+    console.error('loadData error:', err);
+  }
 }
 
 loadData();
-</script>
+</script>  
   
 /* ═══ KINGS MEDIA — LIQUID GLASS OS ═══ */
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@600&display=swap');
 
 /* ── LIGHT TOKENS ── */
 :root {
@@ -1852,13 +1855,14 @@ body::before {
 /* ══ FAB — FLOATING ACTION SYSTEM ════════════════════════════ */
 .fab-zone {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 32px;
+  left: 284px; /* sidebar width + gap */
   z-index: 500;
   display: flex;
   flex-direction: column-reverse;
-  align-items: flex-end;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 10px;
+  transition: left 0.32s cubic-bezier(0.4,0,0.2,1);
 }
 body.sidebar-collapsed .fab-zone { left: 72px; }
 
@@ -2222,11 +2226,11 @@ function autoPriorities(){
 
 // ─── CONSTANTS ──────────────────────────────────────────────
 const SYS=[
-  {k:'magnet',l:'Lead magnet',why:'Free resource that gets delivered after opt-in. Without it, no one has a reason to give their email.'},
-  {k:'dm',l:'DM automation',why:'ManyChat flow collecting email from social DMs. The entry point for the entire subscriber list.'},
-  {k:'newsletter',l:'Newsletter',why:'Weekly email keeping subscribers warm. Without it the list goes cold and unsubscribes climb.'},
-  {k:'crm',l:'CRM connected',why:'All subscriber emails in GHL with correct tags. Without this there is no organized list to send to.'},
-  {k:'testimonial',l:'Testimonial system',why:'Automated review collection running. Without it social proof never grows.'}
+  {k:'magnet',l:'Lead magnet',why:'Opt-in free resource'},
+  {k:'dm',l:'DM automation',why:'ManyChat email capture'},
+  {k:'newsletter',l:'Newsletter',why:'Weekly list email'},
+  {k:'crm',l:'CRM connected',why:'GHL subscriber sync'},
+  {k:'testimonial',l:'Testimonial system',why:'Auto review collection'}
 ];
 const SK=SYS.map(s=>s.k);
 const PIPE=[
