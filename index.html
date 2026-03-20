@@ -5156,7 +5156,7 @@ body::before {
 .fab-zone {
   position: fixed;
   bottom: 32px;
-  left: 284px; /* sidebar width + gap */
+  right: 32px;
   z-index: 500;
   display: flex;
   flex-direction: column-reverse;
@@ -5164,7 +5164,7 @@ body::before {
   gap: 10px;
   transition: left 0.32s cubic-bezier(0.4,0,0.2,1);
 }
-body.sidebar-collapsed .fab-zone { left: 72px; }
+body.sidebar-collapsed /* fab-zone left override removed */
 
 .fab-main {
   width: 48px; height: 48px;
